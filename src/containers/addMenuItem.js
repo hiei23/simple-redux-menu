@@ -10,7 +10,7 @@ class AddMenuItem extends Component {
         }
 
         return(
-            <div id="preview" className="container-fluid col-sm-8">
+            <div id="preview" className="container-fluid">
                 <ul >
                     <MenuItem
                         key={this.props.item.name}

@@ -1,6 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
-//var ExtractTextPlugin = require("extract-text-webpack-plugin")
+var ExtractTextPlugin = require("extract-text-webpack-plugin")
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -8,36 +8,36 @@ module.exports = {
     './src/index.js'
   ],
   output: {
-    path: path.join(__dirname, 'docs'),
-    publicPath: '/',
+    path: path.join(__dirname, 'dist'),
+    publicPath: '/dist',
     filename: 'bundle.js'
   },
   module: {
-    loaders: [
+    rules: [
     	{
 	      exclude: /node_modules/,
-	      loader: 'babel-loader',
-	      query: 
-	      	{
-	        	presets: ['react', 'es2015', 'stage-1']
-	      	}
-	    },
-      {
-        test: /\.html$/,
-        loader: 'html-loader'
-      },
+	      use: 'babel-loader'
+	  	},
+      	{
+        	test: /\.html$/,
+        	use: 'html-loader'
+     	},
 	    {
 	    	test:/\.(jpe?g|png|gif|svg)$/,
-	    	loaders: ['url-loader','image-webpack-loader']
+	    	use: ['file-loader?name=[name].[ext]&outputPath=assets/images/','image-webpack-loader']
 	    },
+	    {
+        	test: /\.css$/,
+        	use: ExtractTextPlugin.extract({
+          		fallback: "style-loader",
+          		use: "css-loader"
+        	})
+      	}
 	]
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
   },
   devServer: {
     historyApiFallback: true,
-    contentBase: './'
+    contentBase: './dist'
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -45,6 +45,9 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    })
+    }),
+    new ExtractTextPlugin("style.css")
   ]
 };
+
+
